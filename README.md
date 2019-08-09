@@ -3,7 +3,7 @@ A very simple Service Locator Library for Kotlin Multiplatform
 
 ## Using the library
 
-* Create Module Interface extending from the `Module` interface
+* Create a Module Interface extending from the `Module` interface
 ```kotlin
 interface ScreenModule : Module {
 
