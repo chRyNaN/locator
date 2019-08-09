@@ -1,0 +1,3 @@
+rootProject.name = 'locator'
+
+enableFeaturePreview('GRADLE_METADATA')
