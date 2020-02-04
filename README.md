@@ -3,7 +3,7 @@ A very simple Service Locator Library for Kotlin Multiplatform
 
 ## Using the library
 
-* Create a Module Interface extending from the `Module` interface
+* Create a custom Module Interface extending from the `Module` interface
 ```kotlin
 interface ScreenModule : Module {
 
@@ -13,7 +13,7 @@ interface ScreenModule : Module {
 }
 ```
 
-* Create Module Implementation
+* Create the Module Implementation
 ```kotlin
 class ScreenModuleImpl(view: ScreenView) : ScreenModule {
 
@@ -31,16 +31,28 @@ class Screen : BaseScreen(),
 
     override val module: ScreenModule = ScreenModuleImpl(view = this)
 
+    ...
+}
+```
+
+* Access values provided by the Module:
+```kotlin
+class Screen : BaseScreen(),
+    ScreenView,
+    LocatesWith<ScreenModule> {
+
+    override val module: ScreenModule = ScreenModuleImpl(view = this)
+    
     private val presenter: ScreenPresenter by locate { presenter }
-
+    
     private val navigator: ScreenNavigator? by locateOrNull { navigator }
-
+    
     override fun onCreate() {
         attachToDependencyGraph()
         // Could also access the fields by the module property
         module.presenter
     }
-
+    
     override fun onDestroy() {
         detachFromDependencyGraph()
     }
@@ -184,4 +196,32 @@ class ScreenModuleImpl(
 
     override val navigator: ScreenNavigator = ScreenNavigator(view = view)
 }
+```
+
+## Building the library
+The library is provided through [Bintray](https://bintray.com/). Refer to the [releases page](https://github.com/chRyNaN/locator/releases) for the latest version.
+
+### Repository
+```kotlin
+repositories {
+    maven {
+        url = uri("https://dl.bintray.com/chrynan/chrynan")
+    }
+}
+```
+
+### Dependencies
+**Kotlin Common Core Module:**
+```kotlin
+implementation("com.chrynan.locator:locator-core:$VERSION")
+```
+
+**Kotlin JVM Module:**
+```kotlin
+implementation("com.chrynan.locator:locator-core-jvm:$VERSION")
+```
+
+**Kotlin JS Module:**
+```kotlin
+implementation("com.chrynan.locator:locator-core-js:$VERSION")
 ```

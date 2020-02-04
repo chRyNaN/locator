@@ -1,4 +1,17 @@
-apply plugin: 'kotlin-multiplatform'
+ext {
+    bintrayRepo = 'chrynan'
+    libraryGroup = 'com.chrynan'
+    libraryOwner = 'chrynan'
+    libraryRepo = 'locator'
+    libraryVersion = '1.0.0'
+    libraryVersionCode = 1
+    libraryVersionDescription = 'First Release'
+    libraryGithubUrl = 'https://github.com/chRyNaN/locator.git'
+    libraryLicense = 'Apache-2.0'
+}
+
+group rootProject.libraryGroup
+version rootProject.libraryVersion
 
 buildscript {
     repositories {
@@ -7,22 +20,18 @@ buildscript {
     }
 
     dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.41"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.61"
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
     }
 }
 
-ext {
-    libraryVersion = '1.0.0'
-    libraryVersionCode = 1
-}
-
-group 'com.chrynan'
-version rootProject.libraryVersion
+apply plugin: 'kotlin-multiplatform'
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
 
 allprojects {
     repositories {
         mavenCentral()
-        mavenLocal()
         jcenter()
     }
 }
@@ -54,3 +63,45 @@ kotlin {
 configurations {
     compileClasspath
 }
+
+publishing {
+    publications {
+        kotlinMultiplatform {
+            artifactId = "locator-core"
+        }
+        jvm {
+            artifactId = "locator-core-jvm"
+        }
+        js {
+            artifactId = "locator-core-js"
+        }
+        metadata {
+            artifactId = "locator-core-metadata"
+        }
+    }
+}
+
+bintray {
+    user = project.findProperty("BINTRAY_USER") ?: System.getenv('BINTRAY_USER')
+    key = project.findProperty("BINTRAY_KEY") ?: System.getenv('BINTRAY_KEY')
+    pkg {
+        repo = rootProject.bintrayRepo
+        name = rootProject.libraryRepo
+        licenses = [rootProject.libraryLicense]
+        vcsUrl = rootProject.libraryGithubUrl
+        version {
+            name = rootProject.libraryVersion
+            desc = rootProject.libraryVersionDescription
+            released = new Date()
+            vcsTag = rootProject.libraryVersion
+        }
+    }
+}
+
+bintrayUpload.doFirst {
+    publications = publishing.publications.collect {
+        it.name
+    }
+}
+
+bintrayUpload.dependsOn publishToMavenLocal
