@@ -1,5 +1,7 @@
 package com.chrynan.locator
 
+import com.chrynan.locator.graph.DependencyGraph
+
 interface LocatesWith<M : Module> {
 
     val module: M

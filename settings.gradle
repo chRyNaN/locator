@@ -1,3 +1,5 @@
-rootProject.name = 'locator'
+rootProject.name = "locator"
 
-enableFeaturePreview('GRADLE_METADATA')
+include ":locator-core"
+
+enableFeaturePreview("GRADLE_METADATA")

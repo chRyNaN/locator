@@ -1,5 +1,8 @@
-package com.chrynan.locator
+package com.chrynan.locator.graph
 
+import com.chrynan.locator.Module
+import com.chrynan.locator.exception.ModuleClassCastException
+import com.chrynan.locator.exception.ModuleNotInitializedException
 import kotlin.reflect.KClass
 
 @PublishedApi
