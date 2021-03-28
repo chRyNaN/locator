@@ -1,27 +1,22 @@
+@file:Suppress("unused")
+
 package com.chrynan.locator.graph
 
 import com.chrynan.locator.Module
-import com.chrynan.locator.exception.ModuleClassCastException
-import com.chrynan.locator.exception.ModuleNotInitializedException
 import kotlin.reflect.KClass
 
 @PublishedApi
 internal object DependencyGraph {
 
-    val modules: MutableMap<KClass<*>, Module> = mutableMapOf()
+    val graph = ModuleGraph()
 
-    inline fun <reified M : Module> getModule(): M {
-        val module =
-            modules[M::class] ?: throw ModuleNotInitializedException("Module not found for KClass = ${M::class}")
+    fun <M : Module> bind(kclass: KClass<M>, module: M): GraphPosition = TODO()
 
-        return module as? M ?: throw ModuleClassCastException(M::class)
-    }
-
-    inline fun <reified M : Module> attachModule(module: M) {
-        modules[M::class] = module
-    }
-
-    inline fun <reified M : Module> detachModule() {
-        modules.remove(M::class)
+    fun <M : Module> unbind(kclass: KClass<M>, module: M) {
+        TODO()
     }
 }
+
+internal inline fun <reified M : Module> DependencyGraph.bind(module: M): GraphPosition = bind(M::class, module)
+
+internal inline fun <reified M : Module> DependencyGraph.unbind(module: M) = unbind(M::class, module)
