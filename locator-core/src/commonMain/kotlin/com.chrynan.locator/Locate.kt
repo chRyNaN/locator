@@ -4,6 +4,7 @@ package com.chrynan.locator
 
 import com.chrynan.locator.graph.DependencyGraph
 import com.chrynan.locator.graph.GraphPosition
+import kotlin.reflect.KClass
 
 interface Locate<M : Module> {
 
@@ -32,5 +33,14 @@ inline fun <reified M : Module, R> Locate<M>.locateOrNull(noinline moduleAccesso
 inline fun <reified L : Module, reified M : Module, R> Locate<L>.locateWith(noinline moduleAccessor: M.() -> R): LocatorWith<L, M, R> =
     LocatorWith(kClass = M::class, position = position, moduleAccessor = moduleAccessor)
 
-inline fun <reified L : Module, reified M : Module, R> Locate<L>.locateWithOrNull(noinline moduleAccessor: M.() -> R): LocatorWithOrNull<L, M, R> =
+internal inline fun <reified L : Module, reified M : Module, R> Locate<L>.locateWithOrNull(noinline moduleAccessor: M.() -> R): LocatorWithOrNull<L, M, R> =
     LocatorWithOrNull(kClass = M::class, position = position, moduleAccessor = moduleAccessor)
+
+
+class TestModule : Module
+
+class OtherTestModule : Module
+
+fun Locate<TestModule>.test() {
+    withModule<OtherTestModule>().locate<> { "" }
+}
